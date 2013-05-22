@@ -1,0 +1,14 @@
+# - Config file for the RT_ARDrone lib
+# It defines the following variables
+#
+#  RT_ARDRONE_INCLUDE_DIRS - include directories
+#  RT_ARDRONE_LIBRARY_DIR  - library directory (normally not used!)
+#  RT_ARDRONE_LIBRARIES    - libraries to link against
+ 
+# Tell the user project where to find our headers and libraries
+
+set(RT_ARDRONE_INCLUDE_DIRS "@INSTALL_HEADERS_PATH@" )
+
+set(RT_ARDRONE_LIBRARY_DIR "@INSTALL_LIB_PATH@" )
+
+set(RT_ARDRONE_LIBRARIES  RT_ARDrone ) 

@@ -1,0 +1,9 @@
+#ifndef RT_ARDRONE_CONFIG_H
+#define RT_ARDRONE_CONFIG_H
+
+
+#define RT_ARDrone_VERSION_MAJOR @vision_VERSION_MAJOR@
+#define RT_ARDrone_VERSION_MINOR @vision_VERSION_MINOR@
+
+
+#endif
