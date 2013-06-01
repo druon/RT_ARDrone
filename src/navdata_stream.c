@@ -29,12 +29,14 @@
 #include <string.h>
 #include <sys/socket.h>
 #include <sys/time.h>
+#include <sys/types.h>
 #include <netdb.h>
 
 #include <RT_ARDrone/navdata_stream.h>
 
 
 void* navdata_threadfct( void* data ) ;
+int32_t shift_byte(int32_t lsb, int32_t mlsb, int32_t mmsb, int32_t msb) ;
 
 
 NavDataStream* NavDataStream_new( const char* ip_addr ) {
@@ -83,6 +85,7 @@ void* navdata_threadfct( void* data ) {
 
 	int ret ;
 	int length ;
+	
 	NavDataStream* stream ;
 	
 	stream = (NavDataStream*) data ;
@@ -92,22 +95,15 @@ void* navdata_threadfct( void* data ) {
 
 	stream->addr.sin_addr = *((struct in_addr *) stream->host->h_addr); 
 		
+	// Send one packet to enter bootstrap mode
+	
 	sendto(	stream->socket, 
 		buf, strlen(buf), 
 		0, 
 		(struct sockaddr *) &(stream->addr), sizeof(stream->addr) );
 
-
 	while(1) {
-	
-		// Send a message to trigger navdata
-
-		sendto(	stream->socket, 
-			buf, strlen(buf), 
-			0, 
-			(struct sockaddr *) &(stream->addr), sizeof(stream->addr) );
-
-
+		
 		// Zeros out the array
 	
 		bzero(&(nav_data), 2048);
@@ -123,7 +119,42 @@ void* navdata_threadfct( void* data ) {
 
 		// Received navdata ... 
 
-		printf("%d bytes received\n", ret);
+		// Stores the initial information from the drone
+		
+		uint32_t header   = shift_byte( nav_data[0], nav_data[1],  nav_data[2], nav_data[3]);
+		uint32_t state    = shift_byte( nav_data[4], nav_data[5],  nav_data[6], nav_data[7]);
+		uint32_t sequence = shift_byte( nav_data[8], nav_data[9],  nav_data[10], nav_data[11]);
+		uint32_t vision	  = shift_byte( nav_data[12],nav_data[13], nav_data[14], nav_data[15]);
+
+		printf ( "%d --- header = %d, state = %d, sequence = %d, vision = %d\n", ret, header, state, sequence, vision ) ;
+
+		int option_index = 16;		// Options start at byte 16
+
+		while ( option_index+8 < ret )
+		{
+			int32_t option_tag = nav_data[option_index];
+			option_index++;
+			option_tag |= (int16_t) nav_data[option_index] << 8;
+			option_index++;
+
+			int32_t option_size = nav_data[option_index];
+			option_index++;
+			option_size |= (int16_t) nav_data[option_index] << 8;
+			option_index++;
+
+			printf("Have option tag: %d with size: %d at index: %d \n", option_tag, option_size, option_index-4);
+
+			if ( ( option_tag == 0 ) && ( option_size > 0 ) ) { 	// this is a navdemo option 
+
+
+
+			} else {
+
+				option_index += (option_size + 1);		// Move on to the next option block
+			}
+			
+		}
+
 
 		// Wait for a while
 
@@ -133,5 +164,14 @@ void* navdata_threadfct( void* data ) {
 
 }
 
+int32_t shift_byte(int32_t lsb, int32_t mlsb, int32_t mmsb, int32_t msb)
+{
+	int32_t tmp = 0;
 
+	tmp = lsb;
+	tmp |= mlsb << 8;
+	tmp |= mmsb << 16;
+	tmp |= msb << 24;
 
+	return tmp ;
+}

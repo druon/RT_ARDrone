@@ -73,18 +73,18 @@ void ATStream_connect( ATStream* stream ) {
 
 	// Set max altitude
 	
-	printf("[ AT ] Setting Max altitude ... \n" ) ;
+	//printf("[ AT ] Setting Max altitude ... \n" ) ;
 	
-	sprintf( msg, "AT*CONFIG=%d,\"control:altitude_max\",\"%d\"\r", stream->seq, 2500 ); //set max alt @ 2.5m
-	sendto( stream->socket, msg, strlen(msg), 0, (struct sockaddr *) &(stream->addr), sizeof(struct sockaddr)); 
-	stream->seq++;
+	//sprintf( msg, "AT*CONFIG=%d,\"control:altitude_max\",\"%d\"\r", stream->seq, 2500 ); //set max alt @ 2.5m
+	//sendto( stream->socket, msg, strlen(msg), 0, (struct sockaddr *) &(stream->addr), sizeof(struct sockaddr)); 
+	//stream->seq++;
 
 	// Set max angle
 
-	printf("[ AT ] Setting Max Euler angle ...\n") ; 
-	sprintf( msg, "AT*CONFIG=%d,\"control:euler_angle_max\",\"%f\"\r", stream->seq, 0.52f);// set max rotation velocity
-	sendto( stream->socket, msg, strlen(msg), 0, (struct sockaddr *) &(stream->addr), sizeof(struct sockaddr)); 
-	stream->seq++;
+	//printf("[ AT ] Setting Max Euler angle ...\n") ; 
+	//sprintf( msg, "AT*CONFIG=%d,\"control:euler_angle_max\",\"%f\"\r", stream->seq, 0.52f);// set max rotation velocity
+	//sendto( stream->socket, msg, strlen(msg), 0, (struct sockaddr *) &(stream->addr), sizeof(struct sockaddr)); 
+	//stream->seq++;
 
 	// Requesting NavData
 	
@@ -113,9 +113,9 @@ void* at_threadfct( void* data ) {
 
 		// Send a watchdog reset
 
-		//sprintf( msg, "AT*COMWDG=%d\r", stream->seq ) ;
-		//sendto( stream->socket, msg, strlen(msg), 0, (struct sockaddr *) &(stream->addr), sizeof(struct sockaddr));
-		//stream->seq++ ;
+		sprintf( msg, "AT*COMWDG=%d\r", stream->seq ) ;
+		sendto( stream->socket, msg, strlen(msg), 0, (struct sockaddr *) &(stream->addr), sizeof(struct sockaddr));
+		stream->seq++ ;
 
 		// Wait before next loop
 
