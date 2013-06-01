@@ -1,5 +1,5 @@
-#ifndef RT_ARDRONE_H
-#define RT_ARDRONE_H
+#ifndef AT_STREAM_H
+#define AT_STREAM_H
 
 
 // ****************************************************************************
@@ -26,26 +26,30 @@
 // ***
 // ****************************************************************************
 
-#include <RT_ARDrone/control_stream.h>
-#include <RT_ARDrone/at_stream.h>
-#include <RT_ARDrone/navdata_stream.h>
-#include <RT_ARDrone/video_stream.h>
+#include <netinet/in.h>
+
+#define AT_PORT	5556
 
 typedef struct {
 
-	ATStream*	at_stream   ;
-	NavDataStream*	navdata_stream ;
-	VideoStream*	video_stream ;
-	ControlStream*	ctrl_stream ;	
+	int 			socket ;
+	struct hostent* 	host ;
+	struct sockaddr_in 	addr;
 
-} ARDrone ;
+	int			seq ;		// Sequence number for AT commands
 
-
-ARDrone* ARDrone_new( const char* ip_addr ) ;
-void ARDrone_free ( ARDrone* drone ) ;
-
-void ARDrone_connect( ARDrone* drone ) ;
+} ATStream ;
 
 
+ATStream* ATStream_new( const char* ip_addr ) ;
+void      ATStream_free( ATStream* ) ;
+
+void ATStream_connect() ; 
 
 #endif
+
+
+
+
+
+

@@ -34,7 +34,7 @@ endforeach()
 
 ### Search for Lib/Headers
 
-#find_package( Eigen3 2.9)
+find_package( Threads )
 
 
 ### Configure a header file to pass some of the CMake settings
@@ -70,8 +70,7 @@ file( GLOB src "src/*.cpp" "src/*.c" )
 ### Main Target and linking
 
 add_library( "RT_ARDrone" SHARED ${src} ${hdr} )
-#target_link_libraries( "RT_ARDrone" ${Boost_LIBRARIES} )
-
+target_link_libraries ( "RT_ARDrone" ${CMAKE_THREAD_LIBS_INIT})
 
 ### Tests programs
 

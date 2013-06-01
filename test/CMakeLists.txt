@@ -1,7 +1,7 @@
 SET(EXEC_NAME test_com)
 
 SET(${EXEC_NAME}_SRC
-    test_com.cpp
+    test_drone.c
 )
 
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/include)

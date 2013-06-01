@@ -1,5 +1,5 @@
-#ifndef RT_ARDRONE_H
-#define RT_ARDRONE_H
+#ifndef NAVDATA_STREAM_H
+#define NAVDATA_STREAM_H
 
 
 // ****************************************************************************
@@ -26,26 +26,41 @@
 // ***
 // ****************************************************************************
 
-#include <RT_ARDrone/control_stream.h>
-#include <RT_ARDrone/at_stream.h>
-#include <RT_ARDrone/navdata_stream.h>
-#include <RT_ARDrone/video_stream.h>
+#include <netinet/in.h>
+#include <pthread.h>
+
+
+#define NAVDATA_PORT	5554
+
 
 typedef struct {
 
-	ATStream*	at_stream   ;
-	NavDataStream*	navdata_stream ;
-	VideoStream*	video_stream ;
-	ControlStream*	ctrl_stream ;	
+	int recv_sock;
+	int send_sock;
+	
+	struct sockaddr_in addr;		
+	struct sockaddr_in recv_addr;		
+	struct sockaddr_in send_addr;		
+	
+	struct hostent* send_host;
 
-} ARDrone ;
+	pthread_t thread ;			
 
 
-ARDrone* ARDrone_new( const char* ip_addr ) ;
-void ARDrone_free ( ARDrone* drone ) ;
 
-void ARDrone_connect( ARDrone* drone ) ;
+} NavDataStream ;
+
+NavDataStream* NavDataStream_new( const char* ip_addr ) ;
+void NavDataStream_free ( NavDataStream* ) ;
+
+void NavDataStream_connect( NavDataStream* stream ) ;
 
 
 
 #endif
+
+
+
+
+
+

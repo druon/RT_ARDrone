@@ -1,7 +1,3 @@
-#ifndef RT_ARDRONE_H
-#define RT_ARDRONE_H
-
-
 // ****************************************************************************
 // ***
 // ***
@@ -26,26 +22,42 @@
 // ***
 // ****************************************************************************
 
-#include <RT_ARDrone/control_stream.h>
-#include <RT_ARDrone/at_stream.h>
-#include <RT_ARDrone/navdata_stream.h>
-#include <RT_ARDrone/video_stream.h>
+#include <stdio.h>
+#include <stdlib.h>
 
-typedef struct {
-
-	ATStream*	at_stream   ;
-	NavDataStream*	navdata_stream ;
-	VideoStream*	video_stream ;
-	ControlStream*	ctrl_stream ;	
-
-} ARDrone ;
+#include <RT_ARDrone/RT_ARDrone.h>
 
 
-ARDrone* ARDrone_new( const char* ip_addr ) ;
-void ARDrone_free ( ARDrone* drone ) ;
+ARDrone* ARDrone_new( const char* ip_addr ) {
 
-void ARDrone_connect( ARDrone* drone ) ;
+	ARDrone* tmp ;
+
+	tmp = (ARDrone*) malloc ( sizeof( ARDrone ) ) ;
+
+	tmp->at_stream = ATStream_new( ip_addr ) ;
+	tmp->ctrl_stream = ControlStream_new ( ip_addr ) ; 
+	tmp->navdata_stream = NavDataStream_new( ip_addr ) ;
+	tmp->video_stream = VideoStream_new( ip_addr ) ;
+	
+	return tmp ;
+
+}
 
 
+void ARDrone_free( ARDrone* drone ) {
 
-#endif
+	ATStream_free( drone->at_stream ) ;
+	ControlStream_free( drone->ctrl_stream ) ;
+	NavDataStream_free( drone->navdata_stream ) ;
+	VideoStream_free( drone->video_stream ) ;
+
+	free( drone ) ;
+}
+
+void ARDrone_connect( ARDrone* drone ) {
+
+	NavDataStream_connect( drone->navdata_stream ) ;
+	ATStream_connect( drone->at_stream ) ;	
+
+}
+

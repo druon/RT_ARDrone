@@ -1,5 +1,5 @@
-#ifndef RT_ARDRONE_H
-#define RT_ARDRONE_H
+#ifndef VIDEO_STREAM_H
+#define VIDEO_STREAM_H
 
 
 // ****************************************************************************
@@ -26,26 +26,25 @@
 // ***
 // ****************************************************************************
 
-#include <RT_ARDrone/control_stream.h>
-#include <RT_ARDrone/at_stream.h>
-#include <RT_ARDrone/navdata_stream.h>
-#include <RT_ARDrone/video_stream.h>
+
+#define VIDEO_PORT	5555
+
 
 typedef struct {
 
-	ATStream*	at_stream   ;
-	NavDataStream*	navdata_stream ;
-	VideoStream*	video_stream ;
-	ControlStream*	ctrl_stream ;	
-
-} ARDrone ;
+	int socket ;		// Socket for the UDP Port
 
 
-ARDrone* ARDrone_new( const char* ip_addr ) ;
-void ARDrone_free ( ARDrone* drone ) ;
 
-void ARDrone_connect( ARDrone* drone ) ;
+} VideoStream ;
 
-
+VideoStream* VideoStream_new ( const char* ip_addr ) ;
+void VideoStream_free ( VideoStream* ) ;
 
 #endif
+
+
+
+
+
+
