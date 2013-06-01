@@ -39,39 +39,27 @@ void* navdata_threadfct( void* data ) ;
 
 NavDataStream* NavDataStream_new( const char* ip_addr ) {
 
-	unsigned int length ;
-	int n ;
+	int ret ;
 	NavDataStream* tmp ;
 	
 	tmp = (NavDataStream*) malloc ( sizeof( NavDataStream ) ) ;
 
-	tmp->recv_sock = socket(AF_INET, SOCK_DGRAM, 0);
-	tmp->send_sock = socket(AF_INET, SOCK_DGRAM, 0);
+	tmp->socket = socket(AF_INET, SOCK_DGRAM, 0);
 
-	if ( tmp->recv_sock == -1) {
-		fprintf(stderr, "[%s] Error creating Navdata receiving socket\n", __FILE__ ) ;
+	if ( tmp->socket == -1) {
+		fprintf(stderr, "[%s] Error creating Navdata socket\n", __FILE__ ) ;
 		exit( EXIT_FAILURE ) ;
 	}
 
-	if ( tmp->send_sock == -1) {
-		fprintf(stderr, "[%s] Error creating Navdata sending socket\n", __FILE__ ) ;
-		perror("socket");
-		exit(1);
-	}
-
+	tmp->host = (struct hostent *) gethostbyname((char *) ip_addr ); 
+	
 	tmp->addr.sin_family = AF_INET;
+	tmp->addr.sin_addr.s_addr = htonl( INADDR_ANY ) ;	
 	tmp->addr.sin_port = htons( NAVDATA_PORT );	
-	tmp->addr.sin_addr.s_addr = INADDR_ANY;	
-	bzero(&(tmp->addr.sin_zero),8);		
+	
+	bzero(&(tmp->addr.sin_zero),8);	
 
-	tmp->send_addr.sin_family = AF_INET;	
-	tmp->send_addr.sin_port = htons( NAVDATA_PORT ) ;
-	tmp->send_host= (struct hostent *) gethostbyname((char *) ip_addr ); 
-	tmp->send_addr.sin_addr = *((struct in_addr *) tmp->send_host->h_addr); 
-	bzero(&(tmp->send_addr.sin_zero),8);	
-
-	length = sizeof(struct sockaddr_in);
-	n = bind( tmp->recv_sock, (struct sockaddr *) &tmp->addr, length);
+	ret = bind( tmp->socket, (struct sockaddr *) &(tmp->addr), sizeof(tmp->addr) );
 
 	return tmp ;
 }
@@ -102,26 +90,36 @@ void* navdata_threadfct( void* data ) {
 	char buf[] = {0x01, 0x00, 0x00, 0x00};
 	unsigned char nav_data[2048];
 
-	length = sizeof( struct sockaddr_in ) ;
+	stream->addr.sin_addr = *((struct in_addr *) stream->host->h_addr); 
+		
+	sendto(	stream->socket, 
+		buf, strlen(buf), 
+		0, 
+		(struct sockaddr *) &(stream->addr), sizeof(stream->addr) );
+
 
 	while(1) {
-		
-		sendto(	stream->send_sock, 
-			buf, 
-			strlen(buf), 
+	
+		// Send a message to trigger navdata
+
+		sendto(	stream->socket, 
+			buf, strlen(buf), 
 			0, 
-			(struct sockaddr *) &(stream->send_addr), 
-			sizeof(struct sockaddr_in) );
+			(struct sockaddr *) &(stream->addr), sizeof(stream->addr) );
+
 
 		// Zeros out the array
 	
 		bzero(&(nav_data), 2048);
 	
 		// Receives data from drone.  Hangs until received
-	
-		ret = recvfrom( stream->recv_sock, 
-			      	nav_data, 2048, 0,
-			        (struct sockaddr *) &(stream->recv_addr), &length );
+
+		int len = sizeof( stream->addr ) ;
+
+		ret = recvfrom( stream->socket, 
+			      	nav_data, 2048, 
+				0,
+			        (struct sockaddr *) &(stream->addr), &len  );
 
 		// Received navdata ... 
 

@@ -35,16 +35,11 @@
 
 typedef struct {
 
-	int recv_sock;
-	int send_sock;
-	
-	struct sockaddr_in addr;		
-	struct sockaddr_in recv_addr;		
-	struct sockaddr_in send_addr;		
-	
-	struct hostent* send_host;
+	int 			socket ;
+	struct sockaddr_in 	addr  ;		
+	struct hostent* 	host;
 
-	pthread_t thread ;			
+	pthread_t 		thread ;			
 
 
 

@@ -25,10 +25,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <strings.h>
+#include <string.h>
 #include <sys/socket.h>
 #include <netdb.h>
 
 #include <RT_ARDrone/at_stream.h>
+
+
+void* at_threadfct( void* data ) ;
 
 
 ATStream* ATStream_new ( const char* ip_addr ) {
@@ -63,20 +67,62 @@ void ATStream_free( ATStream* stream ) {
 
 }
 
-void ATStream_connect() {
+void ATStream_connect( ATStream* stream ) {
+
+	unsigned char msg[1024] ;
 
 	// Set max altitude
-
-	// sprintf(_drone.send_data, "AT*CONFIG=%d,\"control:altitude_max\",\"%d\"\r", _drone.seq, 2500); //set max alt @ 2.5m
-	// sendto(_drone.at_sock, _drone.send_data, strlen(_drone.send_data), 0, (struct sockaddr *)&_drone.at_addr, sizeof(struct sockaddr)); 
-	// _drone.seq++;
+	
+	printf("[ AT ] Setting Max altitude ... \n" ) ;
+	
+	sprintf( msg, "AT*CONFIG=%d,\"control:altitude_max\",\"%d\"\r", stream->seq, 2500 ); //set max alt @ 2.5m
+	sendto( stream->socket, msg, strlen(msg), 0, (struct sockaddr *) &(stream->addr), sizeof(struct sockaddr)); 
+	stream->seq++;
 
 	// Set max angle
 
-	// sprintf(_drone.send_data, "AT*CONFIG=%d,\"control:euler_angle_max\",\"%f\"\r", _drone.seq, 0.52f);// set max rotation velocity
-	// sendto(_drone.at_sock, _drone.send_data, strlen(_drone.send_data), 0, (struct sockaddr *)&_drone.at_addr, sizeof(struct sockaddr)); 
-	// _drone.seq++;
+	printf("[ AT ] Setting Max Euler angle ...\n") ; 
+	sprintf( msg, "AT*CONFIG=%d,\"control:euler_angle_max\",\"%f\"\r", stream->seq, 0.52f);// set max rotation velocity
+	sendto( stream->socket, msg, strlen(msg), 0, (struct sockaddr *) &(stream->addr), sizeof(struct sockaddr)); 
+	stream->seq++;
+
+	// Requesting NavData
+	
+	printf("[ AT ] Requesting Navdata ... \n" ) ;
+	sprintf( msg, "AT*CONFIG=%d,\"general:navdata_demo\",\"TRUE\"\r", stream->seq ) ;
+	sendto( stream->socket, msg, strlen(msg), 0, (struct sockaddr *) &(stream->addr), sizeof(struct sockaddr));
+	stream->seq++ ;
+
+	// Starting AT thread
+
+	printf("[ RT_ARDrone ] Starting AT thread ... \n" ) ;
+
+	stream->thread = pthread_create( &(stream->thread), NULL, at_threadfct, (void*) stream ) ;
 
 }
+
+
+void* at_threadfct( void* data ) {
+
+	ATStream* stream ;
+	unsigned char msg[1024] ;
+
+	stream = (ATStream*) data ;
+
+	while(1) {
+
+		// Send a watchdog reset
+
+		//sprintf( msg, "AT*COMWDG=%d\r", stream->seq ) ;
+		//sendto( stream->socket, msg, strlen(msg), 0, (struct sockaddr *) &(stream->addr), sizeof(struct sockaddr));
+		//stream->seq++ ;
+
+		// Wait before next loop
+
+		usleep( 25000 ) ;
+	}
+
+}
+
 
 

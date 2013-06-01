@@ -56,7 +56,10 @@ void ARDrone_free( ARDrone* drone ) {
 
 void ARDrone_connect( ARDrone* drone ) {
 
+	printf("Connecting ...\n") ;
+
 	NavDataStream_connect( drone->navdata_stream ) ;
+	sleep(1) ;
 	ATStream_connect( drone->at_stream ) ;	
 
 }

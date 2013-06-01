@@ -38,13 +38,15 @@ typedef struct {
 
 	int			seq ;		// Sequence number for AT commands
 
+	pthread_t 		thread ;			
+
 } ATStream ;
 
 
 ATStream* ATStream_new( const char* ip_addr ) ;
 void      ATStream_free( ATStream* ) ;
 
-void ATStream_connect() ; 
+void ATStream_connect( ATStream* ) ; 
 
 #endif
 
