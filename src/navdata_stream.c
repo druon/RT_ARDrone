@@ -85,9 +85,12 @@ void* navdata_threadfct( void* data ) {
 
 	int ret ;
 	int length ;
-	
 	NavDataStream* stream ;
-	
+	uint32_t option_id ;
+	uint32_t option_size ;
+
+
+
 	stream = (NavDataStream*) data ;
 
 	char buf[] = {0x01, 0x00, 0x00, 0x00};
@@ -130,32 +133,20 @@ void* navdata_threadfct( void* data ) {
 
 		int option_index = 16;		// Options start at byte 16
 
-		while ( option_index+8 < ret )
-		{
-			int32_t option_tag = nav_data[option_index];
-			option_index++;
-			option_tag |= (int16_t) nav_data[option_index] << 8;
-			option_index++;
+		do {
+			option_id = nav_data[option_index];
+			option_id |=  nav_data[option_index+1] << 8;
 
-			int32_t option_size = nav_data[option_index];
-			option_index++;
-			option_size |= (int16_t) nav_data[option_index] << 8;
-			option_index++;
+			option_size = nav_data[option_index+2];
+			option_size |=  nav_data[option_index+3] << 8;
 
-			printf("Have option tag: %d with size: %d at index: %d \n", option_tag, option_size, option_index-4);
+			printf("Have option tag: %x with size: %d at index: %d \n", option_id, option_size, option_index);
 
-			if ( ( option_tag == 0 ) && ( option_size > 0 ) ) { 	// this is a navdemo option 
+			option_index += 4 + option_size ; 
 
+		} while ( option_id != 0xffff ) ;
 
-
-			} else {
-
-				option_index += (option_size + 1);		// Move on to the next option block
-			}
-			
-		}
-
-
+		
 		// Wait for a while
 
 		usleep(25000) ;
