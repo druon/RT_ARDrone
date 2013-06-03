@@ -54,6 +54,8 @@ ATStream* ATStream_new ( const char* ip_addr ) {
 	
 	bzero( &(tmp->addr.sin_zero), 8 ) ;	// zeros the array
 
+	pthread_mutex_init( &(tmp->mutex), NULL ) ;
+
 	tmp->seq = 1 ;
 
 	return tmp ;
@@ -97,6 +99,9 @@ void ATStream_connect( ATStream* stream ) {
 
 	printf("[ RT_ARDrone ] Starting AT thread ... \n" ) ;
 
+	sprintf( stream->at_command, "AT*PCMD="  );
+	sprintf( stream->at_argument,"0,0,0,0,0" );
+
 	stream->thread = pthread_create( &(stream->thread), NULL, at_threadfct, (void*) stream ) ;
 
 }
@@ -104,23 +109,129 @@ void ATStream_connect( ATStream* stream ) {
 
 void* at_threadfct( void* data ) {
 
+	int ret ;
 	ATStream* stream ;
 	unsigned char msg[1024] ;
+
+
 
 	stream = (ATStream*) data ;
 
 	while(1) {
 
-		// Send a watchdog reset
 
-		sprintf( msg, "AT*COMWDG=%d\r", stream->seq ) ;
-		sendto( stream->socket, msg, strlen(msg), 0, (struct sockaddr *) &(stream->addr), sizeof(struct sockaddr));
-		stream->seq++ ;
+		pthread_mutex_lock( &(stream->mutex)  );
+
+
+			// Send a watchdog reset
+
+//			sprintf( msg, "AT*COMWDG=%d\r", stream->seq); 
+//			sendto( stream->socket, msg, strlen(msg), 0, (struct sockaddr *)&(stream->addr), sizeof(struct sockaddr)); 
+//			stream->seq++;	// Increment the command seq number	
+
+			sprintf( msg, "%s%d,%s\r", stream->at_command, stream->seq, stream->at_argument );	
+			sendto( stream->socket, msg, strlen(msg), 0, (struct sockaddr *) &(stream->addr), sizeof(struct sockaddr));
+			stream->seq++ ;
+
+		pthread_mutex_unlock( &(stream->mutex) ) ;
+
 
 		// Wait before next loop
 
 		usleep( 25000 ) ;
 	}
+
+}
+
+
+void ATStream_trim( ATStream* stream ) {
+
+	char command[160] ;
+
+	printf("[ AT ] Flat Trimming\n");			
+	
+	pthread_mutex_lock( &(stream->mutex) ) ;
+
+	sprintf( command, "AT*FTRIM=%d,\r", stream->seq ) ;
+	
+	sendto( stream->socket, 
+		command, strlen(command), 0, 
+		(struct sockaddr *) &(stream->addr), sizeof(struct sockaddr) );
+	
+	stream->seq++ ;
+
+	usleep(50000);
+
+	pthread_mutex_unlock( &(stream->mutex) ) ;
+
+}
+
+
+void ATStream_takeoff( ATStream* stream ) {
+
+	char command[160] ;
+
+	printf("[ AT ] Taking Off ... \n");			
+	
+	pthread_mutex_lock( &(stream->mutex) ) ;
+
+	sprintf( command, "AT*REF=%d,290718208\r", stream->seq ) ;
+	
+	sendto( stream->socket, 
+		command, strlen(command), 0, 
+		(struct sockaddr *) &(stream->addr), sizeof(struct sockaddr) );
+	
+	stream->seq++ ;
+
+	pthread_mutex_unlock( &(stream->mutex) ) ;
+
+
+}
+
+
+void ATStream_land( ATStream* stream ) {
+
+	char command[160] ;
+
+	printf("[ AT ] Landing ... \n");			
+	
+	pthread_mutex_lock( &(stream->mutex) ) ;
+
+	sprintf( command, "AT*REF=%d,290717696\r", stream->seq ) ;
+	
+	sendto( stream->socket, 
+		command, strlen(command), 0, 
+		(struct sockaddr *) &(stream->addr), sizeof(struct sockaddr) );
+	
+	stream->seq++ ;
+
+	pthread_mutex_unlock( &(stream->mutex) ) ;
+
+
+}
+
+void ATStream_reset_defaults( ATStream* stream ) {
+
+	char command[160] ;
+
+	printf("[ AT ] Resetting defaults ... \n");			
+	
+	pthread_mutex_lock( &(stream->mutex) ) ;
+	sprintf( command, "AT*REF=%d,290717952\r", stream->seq ) ;
+	
+	sendto( stream->socket, 
+		command, strlen(command), 0, 
+		(struct sockaddr *) &(stream->addr), sizeof(struct sockaddr) );
+	
+	stream->seq++ ;
+
+	pthread_mutex_unlock( &(stream->mutex) ) ;
+
+
+
+}
+
+void ATStream_move( ATStream* stream, float roll, float pitch, float yaw, float gaz ) {
 
 }
 

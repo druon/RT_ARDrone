@@ -26,6 +26,7 @@
 // ***
 // ****************************************************************************
 
+#include <pthread.h>
 #include <netinet/in.h>
 
 #define AT_PORT	5556
@@ -39,6 +40,11 @@ typedef struct {
 	int			seq ;		// Sequence number for AT commands
 
 	pthread_t 		thread ;			
+	pthread_mutex_t		mutex ;		// This mutex protects the access to the
+						//  at_commmand and at_argument fields
+
+	char at_command[80] ;			// Currently executed AT command
+	char at_argument[80] ;		
 
 } ATStream ;
 
@@ -47,6 +53,14 @@ ATStream* ATStream_new( const char* ip_addr ) ;
 void      ATStream_free( ATStream* ) ;
 
 void ATStream_connect( ATStream* ) ; 
+
+
+void ATStream_trim( ATStream* stream ) ;
+void ATStream_takeoff( ATStream* stream ) ;
+void ATStream_land( ATStream* stream ) ;
+void ATStream_move( ATStream* stream, float roll, float pitch, float yaw, float gaz ) ; 
+
+void ATStream_reset_defaults( ATStream* stream ) ;
 
 #endif
 

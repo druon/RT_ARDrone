@@ -33,6 +33,25 @@
 
 typedef struct {
 
+	uint32_t state ; 
+	uint32_t bat ;   
+
+	float theta ;
+	float phi ;
+	float psi ;
+				
+	int32_t altitude ; 				
+				
+	float vx ; 
+	float vy ;
+	float vz ;
+
+} NavData ;
+
+
+
+typedef struct {
+
 	ATStream*	at_stream   ;
 	NavDataStream*	navdata_stream ;
 	VideoStream*	video_stream ;
@@ -45,7 +64,14 @@ ARDrone* ARDrone_new( const char* ip_addr ) ;
 void ARDrone_free ( ARDrone* drone ) ;
 
 void ARDrone_connect( ARDrone* drone ) ;
+void ARDrone_disconnect( ARDrone* drone ) ;
 
+void ARDrone_trim( ARDrone* drone ) ;
+void ARDrone_takeoff( ARDrone* drone ) ;
+void ARDrone_land( ARDrone* drone ) ;
+void ARDrone_move( ARDrone*, float roll, float pitch, float yaw, float gaz ) ; 
+
+void ARDrone_reset_defaults( ARDrone* ) ;
 
 
 #endif

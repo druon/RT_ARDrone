@@ -43,14 +43,13 @@ typedef struct {
 
 
 
+
 } NavDataStream ;
 
 NavDataStream* NavDataStream_new( const char* ip_addr ) ;
 void NavDataStream_free ( NavDataStream* ) ;
 
 void NavDataStream_connect( NavDataStream* stream ) ;
-
-
 
 #endif
 

@@ -13,3 +13,26 @@ ADD_EXECUTABLE(${EXEC_NAME}
 
 TARGET_LINK_LIBRARIES(${EXEC_NAME} ${PROJECT_NAME})
 
+
+
+# ----------------------------------------------------------
+
+
+
+SET(EXEC_NAME reinit_drone)
+
+SET(${EXEC_NAME}_SRC
+    reinit_drone.c
+)
+
+INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/include)
+LINK_DIRECTORIES(${${PROJECT_NAME}_BINARY_DIR})
+
+ADD_EXECUTABLE(${EXEC_NAME}
+    ${${EXEC_NAME}_SRC}
+)
+
+TARGET_LINK_LIBRARIES(${EXEC_NAME} ${PROJECT_NAME})
+
+
+

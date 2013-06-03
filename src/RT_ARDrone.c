@@ -64,3 +64,43 @@ void ARDrone_connect( ARDrone* drone ) {
 
 }
 
+
+void ARDrone_trim( ARDrone* drone ) {
+	
+	ATStream_trim( drone->at_stream ) ;
+
+}
+
+
+void ARDrone_takeoff( ARDrone* drone ) {
+
+	ATStream_takeoff( drone->at_stream ) ;
+
+}
+
+
+void ARDrone_land( ARDrone* drone ) {
+
+	ATStream_land( drone->at_stream ) ;
+
+}
+
+
+void ARDrone_reset_defaults( ARDrone* drone ) {
+
+	ATStream_reset_defaults( drone->at_stream ) ;
+
+}
+
+
+void ARDrone_move( ARDrone* drone, float roll, float pitch, float yaw, float gaz ) {
+
+	ATStream_move( drone->at_stream, roll, pitch, yaw, gaz ) ;
+
+
+}
+
+
+
+
+

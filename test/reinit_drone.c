@@ -14,11 +14,8 @@ int main ( int argc, char** argv, char** envv ) {
 	
 	sleep(2) ;
 
-	ARDrone_takeoff( bob ) ;
+	ARDrone_reset_defaults( bob ) ;
 
-	sleep(15) ;
-
-	ARDrone_land( bob ) ;
 
 	ARDrone_free( bob ) ;
 
