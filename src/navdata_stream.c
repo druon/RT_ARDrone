@@ -63,6 +63,8 @@ NavDataStream* NavDataStream_new( const char* ip_addr ) {
 
 	ret = bind( tmp->socket, (struct sockaddr *) &(tmp->addr), sizeof(tmp->addr) );
 
+	pthread_mutex_init( &(tmp->mutex), NULL ) ;
+	
 	return tmp ;
 }
 
@@ -179,6 +181,21 @@ void* navdata_threadfct( void* data ) {
   				// matrix33_t  drone_camera_rot;        Octets 60->63 Deprecated !!!
 				// vector31_t  drone_camera_trans;      Octets 63->66 Deprecated !!!
 
+				
+				pthread_mutex_lock( &(stream->mutex)  );
+
+				stream->current_navdata.altitude = altitude ;
+				stream->current_navdata.bat = bat ;
+				stream->current_navdata.phi = phi ;
+				stream->current_navdata.psi = psi ;
+				stream->current_navdata.state = state ;
+				stream->current_navdata.theta = theta ;
+				stream->current_navdata.vx = vx ;
+				stream->current_navdata.vy = vy ;
+				stream->current_navdata.vz = vz ;
+
+				pthread_mutex_unlock( &(stream->mutex)  );
+
 			}			
 
 			option_index += 4 + option_size ; 
@@ -208,5 +225,22 @@ int32_t shift_byte(int32_t lsb, int32_t mlsb, int32_t mmsb, int32_t msb)
 
 
 
+void NavDataStream_get_navdata( NavDataStream* stream, NavData* data ) {
+
+	pthread_mutex_lock( &(stream->mutex)  );
+
+	data->altitude = stream->current_navdata.altitude ;
+	data->bat = stream->current_navdata.bat ;
+	data->phi = stream->current_navdata.phi ;
+	data->psi = stream->current_navdata.psi ;
+	data->state = stream->current_navdata.state ;
+	data->theta = stream->current_navdata.theta ;
+	data->vx = stream->current_navdata.vx ;
+	data->vy = stream->current_navdata.vy ;
+	data->vz = stream->current_navdata.vz ;
+
+	pthread_mutex_unlock( &(stream->mutex)  );
+
+}
 
 

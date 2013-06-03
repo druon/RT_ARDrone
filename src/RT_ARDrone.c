@@ -101,6 +101,11 @@ void ARDrone_move( ARDrone* drone, float roll, float pitch, float yaw, float gaz
 }
 
 
+void ARDrone_get_navdata( ARDrone* drone, NavData* navdata ) {
+
+	NavDataStream_get_navdata( drone->navdata_stream, navdata ) ;
+}
+
 
 
 

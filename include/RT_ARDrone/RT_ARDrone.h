@@ -26,29 +26,12 @@
 // ***
 // ****************************************************************************
 
+#include <RT_ARDrone/navdata.h>
+
 #include <RT_ARDrone/control_stream.h>
 #include <RT_ARDrone/at_stream.h>
 #include <RT_ARDrone/navdata_stream.h>
 #include <RT_ARDrone/video_stream.h>
-
-typedef struct {
-
-	uint32_t state ; 
-	uint32_t bat ;   
-
-	float theta ;
-	float phi ;
-	float psi ;
-				
-	int32_t altitude ; 				
-				
-	float vx ; 
-	float vy ;
-	float vz ;
-
-} NavData ;
-
-
 
 typedef struct {
 
@@ -73,5 +56,7 @@ void ARDrone_move( ARDrone*, float roll, float pitch, float yaw, float gaz ) ;
 
 void ARDrone_reset_defaults( ARDrone* ) ;
 
+
+void ARDrone_get_navdata( ARDrone*, NavData* ) ;
 
 #endif

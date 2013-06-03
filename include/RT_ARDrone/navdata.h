@@ -1,6 +1,5 @@
-#ifndef NAVDATA_STREAM_H
-#define NAVDATA_STREAM_H
-
+#ifndef NAVDATA_H
+#define NAVDATA_H
 
 // ****************************************************************************
 // ***
@@ -26,39 +25,24 @@
 // ***
 // ****************************************************************************
 
-#include <netinet/in.h>
-#include <pthread.h>
-
-#include <RT_ARDrone/navdata.h>
-
-#define NAVDATA_PORT	5554
-
+#include <stdint.h>
 
 typedef struct {
 
-	int 			socket ;
-	struct sockaddr_in 	addr  ;		
-	struct hostent* 	host;
+	uint32_t state ; 
+	uint32_t bat ;   
 
-	pthread_t 		thread ;			
-	pthread_mutex_t		mutex ;
+	float theta ;
+	float phi ;
+	float psi ;
+				
+	int32_t altitude ; 				
+				
+	float vx ; 
+	float vy ;
+	float vz ;
 
-	NavData			current_navdata ;
-
-} NavDataStream ;
-
-NavDataStream* NavDataStream_new( const char* ip_addr ) ;
-void NavDataStream_free ( NavDataStream* ) ;
-
-void NavDataStream_connect( NavDataStream* stream ) ;
-
-void NavDataStream_get_navdata( NavDataStream* stream, NavData* data ) ;
+} NavData ;
 
 
 #endif
-
-
-
-
-
-
