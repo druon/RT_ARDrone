@@ -27,6 +27,7 @@
 // ****************************************************************************
 
 #include <pthread.h>
+#include <stdint.h>
 #include <netinet/in.h>
 
 #define AT_PORT	5556
@@ -58,7 +59,7 @@ void ATStream_connect( ATStream* ) ;
 void ATStream_trim( ATStream* stream ) ;
 void ATStream_takeoff( ATStream* stream ) ;
 void ATStream_land( ATStream* stream ) ;
-void ATStream_move( ATStream* stream, float roll, float pitch, float yaw, float gaz ) ; 
+void ATStream_move( ATStream* stream, uint32_t flag, float roll, float pitch, float yaw, float gaz ) ; 
 
 void ATStream_reset_defaults( ATStream* stream ) ;
 

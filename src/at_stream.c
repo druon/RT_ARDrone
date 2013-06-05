@@ -231,7 +231,18 @@ void ATStream_reset_defaults( ATStream* stream ) {
 
 }
 
-void ATStream_move( ATStream* stream, float roll, float pitch, float yaw, float gaz ) {
+void ATStream_move( ATStream* stream, uint32_t flag, float roll, float pitch, float yaw, float gaz ) {
+
+	pthread_mutex_lock( &(stream->mutex) ) ;
+
+	sprintf( stream->at_command,"AT*PCMD=" ) ;
+	sprintf( stream->at_argument,"%d,%d,%d,%d,%d", flag, 
+							*(int*)(&roll),
+							*(int*)(&pitch),
+							*(int*)(&gaz),
+							*(int*)(&yaw) ) ;
+
+	pthread_mutex_unlock( &(stream->mutex) ) ;
 
 }
 

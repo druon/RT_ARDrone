@@ -61,7 +61,8 @@ void ARDrone_connect( ARDrone* drone ) {
 	NavDataStream_connect( drone->navdata_stream ) ;
 	sleep(1) ;
 	ATStream_connect( drone->at_stream ) ;	
-
+	// sleep(1) ;
+	// VideoStream_connect ( drone->video_stream ) ;
 }
 
 
@@ -93,9 +94,9 @@ void ARDrone_reset_defaults( ARDrone* drone ) {
 }
 
 
-void ARDrone_move( ARDrone* drone, float roll, float pitch, float yaw, float gaz ) {
+void ARDrone_move( ARDrone* drone, uint32_t flag, float roll, float pitch, float yaw, float gaz ) {
 
-	ATStream_move( drone->at_stream, roll, pitch, yaw, gaz ) ;
+	ATStream_move( drone->at_stream, flag, roll, pitch, yaw, gaz ) ;
 
 
 }

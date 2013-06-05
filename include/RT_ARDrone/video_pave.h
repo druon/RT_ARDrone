@@ -1,5 +1,5 @@
-#ifndef VIDEO_STREAM_H
-#define VIDEO_STREAM_H
+#ifndef VIDEO_PAVE_H
+#define VIDEO_PAVE_H
 
 
 // ****************************************************************************
@@ -27,33 +27,43 @@
 // ****************************************************************************
 
 #include <pthread.h>
+#include <stdint.h>
 #include <netinet/in.h>
-
-#define VIDEO_PORT	5555
 
 
 typedef struct {
 
-	int 			socket ;	// Socket for the TCP Port
-	struct hostent*		host ;		
-	struct sockaddr_in	addr ;	
+	uint8_t		signature[4] ;		// Shouldbe 'P' 'a' 'V' 'E'
+	uint8_t		version ;
+	uint8_t		video_codec ;
+	uint16_t	header_size ;
+	uint32_t	payload_size ;
+	uint16_t	encoded_stream_width ;
+	uint16_t	encoded_stream_height ;
+	uint16_t	display_width ;
+	uint16_t	display_height ;
+	uint32_t	frame_number ;
+	uint32_t	timestamp ;
+	uint8_t		total_chunks ;
+	uint8_t		chunk_index ;
+	uint8_t		frame_type ;
+	uint8_t		control ;
+	uint32_t	stream_byte_position_lw ;
+	uint32_t	stream_byte_position_uw ;
+	uint16_t	stream_id ;
+	uint8_t		total_slices ;
+	uint8_t		slice_index ;
+	uint8_t		header1_size ;
+	uint8_t		header2_size ;
+	uint8_t		reserved2[2] ;
+	uint32_t	advertized_size ;
+	uint8_t		reserved3[12] ;
 
-	pthread_t		thread ;
-	pthread_mutex_t		mutex ;
 
+} Pave ;
 
-} VideoStream ;
-
-VideoStream* VideoStream_new ( const char* ip_addr ) ;
-void VideoStream_free ( VideoStream* ) ;
-
-void VideoStream_connect ( VideoStream* ) ;
 
 
 #endif
-
-
-
-
 
 

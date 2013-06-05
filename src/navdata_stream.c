@@ -34,9 +34,9 @@
 
 #include <RT_ARDrone/navdata_stream.h>
 
+#include "shift_byte.h"
 
 void* navdata_threadfct( void* data ) ;
-int32_t shift_byte(int32_t lsb, int32_t mlsb, int32_t mmsb, int32_t msb) ;
 
 
 NavDataStream* NavDataStream_new( const char* ip_addr ) {
@@ -210,20 +210,6 @@ void* navdata_threadfct( void* data ) {
 	}
 
 }
-
-int32_t shift_byte(int32_t lsb, int32_t mlsb, int32_t mmsb, int32_t msb)
-{
-	int32_t tmp = 0;
-
-	tmp = lsb;
-	tmp |= mlsb << 8;
-	tmp |= mmsb << 16;
-	tmp |= msb << 24;
-
-	return tmp ;
-}
-
-
 
 void NavDataStream_get_navdata( NavDataStream* stream, NavData* data ) {
 

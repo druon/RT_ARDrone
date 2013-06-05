@@ -1,7 +1,3 @@
-#ifndef VIDEO_STREAM_H
-#define VIDEO_STREAM_H
-
-
 // ****************************************************************************
 // ***
 // ***
@@ -26,31 +22,21 @@
 // ***
 // ****************************************************************************
 
-#include <pthread.h>
-#include <netinet/in.h>
-
-#define VIDEO_PORT	5555
+#include "shift_byte.h"
 
 
-typedef struct {
+int32_t shift_byte(int32_t lsb, int32_t mlsb, int32_t mmsb, int32_t msb)
+{
+	int32_t tmp = 0;
 
-	int 			socket ;	// Socket for the TCP Port
-	struct hostent*		host ;		
-	struct sockaddr_in	addr ;	
+	tmp = lsb;
+	tmp |= mlsb << 8;
+	tmp |= mmsb << 16;
+	tmp |= msb << 24;
 
-	pthread_t		thread ;
-	pthread_mutex_t		mutex ;
+	return tmp ;
+}
 
-
-} VideoStream ;
-
-VideoStream* VideoStream_new ( const char* ip_addr ) ;
-void VideoStream_free ( VideoStream* ) ;
-
-void VideoStream_connect ( VideoStream* ) ;
-
-
-#endif
 
 
 
