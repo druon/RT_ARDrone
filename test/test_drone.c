@@ -15,18 +15,12 @@ int main ( int argc, char** argv, char** envv ) {
 	
 	sleep(2) ;
 
-	ARDrone_takeoff( bob ) ;
-
 	for ( i=0; i<15; i++ ) {
 
 		sleep(1) ;
 		ARDrone_get_navdata( bob, &data ) ;
-		printf( "state %d - bat %d - RTL %f %f %f - Vitesse %f %f %f \n", data.state, data.bat, data.theta, data.phi, data.psi, data.vx, data.vy, data.vz ) ;
+		printf( "state %d - bat %d \n", data.state, data.bat ) ;
 	}
-
-
-	ARDrone_land( bob ) ;
-
 
 	ARDrone_free( bob ) ;
 
