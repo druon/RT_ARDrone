@@ -1,6 +1,5 @@
-#ifndef VIDEO_PAVE_H
-#define VIDEO_PAVE_H
-
+#ifndef IMAGE_H
+#define IMAGE_H
 
 // ****************************************************************************
 // ***
@@ -26,44 +25,39 @@
 // ***
 // ****************************************************************************
 
-#include <pthread.h>
-#include <stdint.h>
-#include <netinet/in.h>
 
 
 typedef struct {
 
-	uint8_t		signature[4] ;		// Shouldbe 'P' 'a' 'V' 'E'
-	uint8_t		version ;
-	uint8_t		video_codec ;
-	uint16_t	header_size ;
-	uint32_t	payload_size ;
-	uint16_t	encoded_stream_width ;
-	uint16_t	encoded_stream_height ;
-	uint16_t	display_width ;
-	uint16_t	display_height ;
-	uint32_t	frame_number ;
-	uint32_t	timestamp ;
-	uint8_t		total_chunks ;
-	uint8_t		chunk_index ;
-	uint8_t		frame_type ;
-	uint8_t		control ;
-	uint32_t	stream_byte_position_lw ;
-	uint32_t	stream_byte_position_uw ;
-	uint16_t	stream_id ;
-	uint8_t		total_slices ;
-	uint8_t		slice_index ;
-	uint8_t		header1_size ;
-	uint8_t		header2_size ;
-	uint8_t		reserved2[2] ;
-	uint32_t	advertized_size ;
-	uint8_t		reserved3[12] ;
+	int width  ;
+	int height ;
+	
+	unsigned char* pixels ;
 
 
-} Pave ;
+} RGB24Image ;
 
 
+
+typedef struct {
+
+	int width ;
+	int height ;
+
+	unsigned char* pixels ;
+
+} YUV420Image ;
+
+
+
+
+RGB24Image* RGB24Image_new( int width, int height ) ;
+void RGB24Image_del( RGB24Image* ) ;
+void RGB24Image_resize( RGB24Image*, int width, int height ) ;
+
+
+YUV420Image* YUV420Image_new( int width, int height ) ;
+void YUV420Image_del( YUV420Image* ) ;
+void YUV420Image_resize( YUV420Image*, int width, int height ) ;
 
 #endif
-
-

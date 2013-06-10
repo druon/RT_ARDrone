@@ -61,8 +61,8 @@ void ARDrone_connect( ARDrone* drone ) {
 	NavDataStream_connect( drone->navdata_stream ) ;
 	sleep(1) ;
 	ATStream_connect( drone->at_stream ) ;	
-	// sleep(1) ;
-	// VideoStream_connect ( drone->video_stream ) ;
+	sleep(1) ;
+	VideoStream_connect ( drone->video_stream ) ;
 }
 
 
@@ -108,5 +108,10 @@ void ARDrone_get_navdata( ARDrone* drone, NavData* navdata ) {
 }
 
 
+void ARDrone_get_RGB24Image( ARDrone* drone, RGB24Image* img ) {
+
+	VideoStream_getRGB24Image( drone->video_stream, img ) ;
+
+}
 
 

@@ -1,7 +1,3 @@
-#ifndef VIDEO_STREAM_H
-#define VIDEO_STREAM_H
-
-
 // ****************************************************************************
 // ***
 // ***
@@ -26,59 +22,40 @@
 // ***
 // ****************************************************************************
 
-#include <pthread.h>
-#include <netinet/in.h>
-
-#include <libavcodec/avcodec.h>
-#include <libavformat/avformat.h>
-#include <libswscale/swscale.h>
-
 #include <RT_ARDrone/image.h>
 
-#define VIDEO_PORT	5555
 
-typedef struct {
+RGB24Image* RGB24Image_new( int width, int height ) {
 
-	// socket stuff
+	RGB24Image* tmp ;
+	tmp = (RGB24Image*) malloc ( sizeof ( RGB24Image ) ) ;
+	tmp->height = 480 ;
+	tmp->width = 640 ;
+	tmp->pixels = ( unsigned char*) malloc ( tmp->height * tmp->width * 3 ) ;
 
-	int 			socket ;
-	struct hostent*		host ;		
-	struct sockaddr_in	addr ;	
-
-	// thread stuff
-
-	pthread_t		thread ;
-	pthread_mutex_t		mutex ;
-
-	// H264 decoder
-
-	AVCodec* 	pCodecH264 ; 
-	AVCodecContext* pCodecCtxH264 ;
-	AVDictionary* 	opts ;
-	AVPacket 	packet ;
-
-	AVFrame*	picture ;		// last picture captured. protected by mutex
-
-	int 		bool_new_picture ;	// True if one picture was captured since last read
-	
-	// Conversion to RGB24
-
-  	struct SwsContext* 	sws_ctx ;
-	AVFrame* 	   	RGBPicture ;
+	return tmp ;
 
 
+}
 
-} VideoStream ;
 
-VideoStream* VideoStream_new ( const char* ip_addr ) ;
-void VideoStream_free ( VideoStream* ) ;
+void RGB24Image_del( RGB24Image* image ) {
 
-void VideoStream_connect ( VideoStream* ) ;
+	free ( image->pixels ) ;
+	free ( image ) ;
 
-void VideoStream_getRGB24Image( VideoStream*, RGB24Image* ) ;
-void VideoStream_getYUV420Image( VideoStream*, YUV420Image* ) ;
 
-#endif
+}
+
+void RGB24Image_resize( RGB24Image* image,  int width, int height ) {
+
+	image->height = height ;
+	image->width = width ;
+	free ( image->pixels ) ;
+
+	image->pixels = (unsigned char*) malloc ( height * width * 3 ) ;
+
+}
 
 
 

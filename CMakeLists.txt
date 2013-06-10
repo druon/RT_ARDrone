@@ -35,7 +35,7 @@ endforeach()
 ### Search for Lib/Headers
 
 find_package( Threads )
-
+find_package( FFMPEG ) 
 
 ### Configure a header file to pass some of the CMake settings
 ### to the source code
@@ -54,11 +54,6 @@ include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/include"
                      "${CMAKE_INSTALL_PREFIX}/include" )
 
 
-### Set link directories
-
-# link_directories( "${Boost_LIBRARY_DIRS}" )
-
-
 ### File Lists
 
 file( GLOB hdr_global  "include/RT_ARDrone/*.h*")
@@ -70,7 +65,8 @@ file( GLOB src "src/*.cpp" "src/*.c" )
 ### Main Target and linking
 
 add_library( "RT_ARDrone" SHARED ${src} ${hdr} )
-target_link_libraries ( "RT_ARDrone" ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries ( "RT_ARDrone" ${CMAKE_THREAD_LIBS_INIT}
+				     ${FFMPEG_LIBRARIES} )
 
 ### Tests programs
 
