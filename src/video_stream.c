@@ -169,7 +169,7 @@ void* video_threadfct( void* data ) {
 				stream->pCodecCtxH264->width  = shift_byte( buffer[12], buffer[13], 0, 0 ) ;
 				stream->pCodecCtxH264->height = shift_byte( buffer[14], buffer[15],0, 0 ) ;
 
-				printf(" processing %d %d \n", stream->pCodecCtxH264->width, stream->pCodecCtxH264->height ) ;
+//				printf(" processing %d %d \n", stream->pCodecCtxH264->width, stream->pCodecCtxH264->height ) ;
 
 				process_frame( stream, &(buffer[header_size]), payload_size ) ;
 				
@@ -248,6 +248,22 @@ void VideoStream_getRGB24Image( VideoStream* stream, RGB24Image* image ) {
 
 
 
-void VideoStream_getYUV420Image( VideoStream*, YUV420Image* ) ;
+void VideoStream_getYUV420Image( VideoStream* stream, YUV420Image* img ) {
+
+
+
+	pthread_mutex_lock( &(stream->mutex) ) ;
+
+	if ( stream->bool_new_picture == 1 ) {
+
+		memcpy ( img->pixels, stream->picture->data[0], stream->picture->linesize[0] * stream->picture->height ) ;
+
+		stream->bool_new_picture = 0 ;
+	}
+
+
+	pthread_mutex_unlock( &(stream->mutex) ) ;
+
+}
 
 

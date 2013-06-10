@@ -115,3 +115,9 @@ void ARDrone_get_RGB24Image( ARDrone* drone, RGB24Image* img ) {
 }
 
 
+void ARDrone_get_YUV420Image( ARDrone* drone, YUV420Image* img ) {
+
+	VideoStream_getYUV420Image( drone->video_stream, img ) ;
+
+}
+

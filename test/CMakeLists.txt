@@ -39,10 +39,30 @@ TARGET_LINK_LIBRARIES(${EXEC_NAME} ${PROJECT_NAME})
 
 
 
-SET(EXEC_NAME test_video)
+SET(EXEC_NAME test_video_RGB24)
 
 SET(${EXEC_NAME}_SRC
-    test_video.c
+	test_video_RGB24.c
+)
+
+INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/include)
+LINK_DIRECTORIES(${${PROJECT_NAME}_BINARY_DIR})
+
+ADD_EXECUTABLE(${EXEC_NAME}
+    ${${EXEC_NAME}_SRC}
+)
+
+TARGET_LINK_LIBRARIES(${EXEC_NAME} ${PROJECT_NAME})
+
+
+# ----------------------------------------------------------
+
+
+
+SET(EXEC_NAME test_video_YUV420)
+
+SET(${EXEC_NAME}_SRC
+    test_video_YUV420.c
 )
 
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/include)

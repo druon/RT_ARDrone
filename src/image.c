@@ -23,7 +23,7 @@
 // ****************************************************************************
 
 #include <RT_ARDrone/image.h>
-
+#include <stdlib.h>
 
 RGB24Image* RGB24Image_new( int width, int height ) {
 
@@ -55,6 +55,34 @@ void RGB24Image_resize( RGB24Image* image,  int width, int height ) {
 
 	image->pixels = (unsigned char*) malloc ( height * width * 3 ) ;
 
+}
+
+
+YUV420Image* YUV420Image_new( int width, int height ) {
+
+	YUV420Image* tmp ;
+
+	tmp = (YUV420Image*) malloc ( sizeof ( YUV420Image ) ) ;
+	tmp->height = 480 ;
+	tmp->width = 640 ;
+	tmp->pixels = ( unsigned char*) malloc ( tmp->height * tmp->width * 4.5 ) ;
+	
+	return tmp ;
+
+}
+
+void YUV420Image_del( YUV420Image* image) {
+	free ( image->pixels ) ;
+	free ( image ) ;
+
+}
+
+void YUV420Image_resize( YUV420Image* image, int width, int height ) {
+
+	image->width = width ;
+	image->height = height ;
+	free ( image->pixels ) ;
+	image->pixels = ( unsigned char* ) malloc ( image->width * image->height * 4.5 ) ;
 }
 
 
