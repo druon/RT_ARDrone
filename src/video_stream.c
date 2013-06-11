@@ -54,6 +54,8 @@ VideoStream* VideoStream_new( const char* ip_addr ) {
 	bzero( &(tmp->addr.sin_zero), 8 ) ;	// zeros the array
 
 	pthread_mutex_init( &(tmp->mutex), NULL ) ;
+
+	tmp->opts = NULL ;
 	
 	return tmp ;
 }
