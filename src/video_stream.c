@@ -168,10 +168,10 @@ void* video_threadfct( void* data ) {
 
 			if ( size > header_size + payload_size ) {
 
-				stream->pCodecCtxH264->width  = shift_byte( buffer[12], buffer[13], 0, 0 ) ;
-				stream->pCodecCtxH264->height = shift_byte( buffer[14], buffer[15],0, 0 ) ;
+				stream->pCodecCtxH264->width  = shift_byte( buffer[16], buffer[17], 0, 0 ) ;
+				stream->pCodecCtxH264->height = shift_byte( buffer[18], buffer[19], 0, 0 ) ;
 
-//				printf(" processing %d %d \n", stream->pCodecCtxH264->width, stream->pCodecCtxH264->height ) ;
+				// printf(" processing %d %d \n", stream->pCodecCtxH264->width, stream->pCodecCtxH264->height ) ;
 
 				process_frame( stream, &(buffer[header_size]), payload_size ) ;
 				
