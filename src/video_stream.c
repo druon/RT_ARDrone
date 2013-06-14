@@ -213,7 +213,7 @@ void VideoStream_getRGB24Image( VideoStream* stream, RGB24Image* image ) {
 
 	if ( stream->bool_new_picture == 1 ) {
 
-		int numBytes=avpicture_get_size( PIX_FMT_RGB24, stream->pCodecCtxH264->width, stream->pCodecCtxH264->height ) ;
+		// int numBytes=avpicture_get_size( PIX_FMT_RGB24, stream->pCodecCtxH264->width, stream->pCodecCtxH264->height ) ;
 
 		if ( ( image->width != stream->pCodecCtxH264->width ) || (image->height != stream->pCodecCtxH264->height ) )
 			RGB24Image_resize( image, stream->pCodecCtxH264->width, stream->pCodecCtxH264->height ) ;
