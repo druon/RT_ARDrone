@@ -121,3 +121,9 @@ void ARDrone_get_YUV420Image( ARDrone* drone, YUV420Image* img ) {
 
 }
 
+void ARDrone_zap_camera( ARDrone* drone, int camera ) {
+
+	ATStream_zap_camera ( drone->at_stream, camera ) ;
+
+}
+

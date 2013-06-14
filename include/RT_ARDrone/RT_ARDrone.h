@@ -63,5 +63,7 @@ void ARDrone_get_navdata( ARDrone*, NavData* ) ;
 void ARDrone_get_RGB24Image ( ARDrone*, RGB24Image* ) ;
 void ARDrone_get_YUV420Image ( ARDrone*, YUV420Image* ) ;
 
+void ARDrone_zap_camera ( ARDrone*, int ) ;
+
 
 #endif

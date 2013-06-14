@@ -63,6 +63,8 @@ void ATStream_move( ATStream* stream, uint32_t flag, float roll, float pitch, fl
 
 void ATStream_reset_defaults( ATStream* stream ) ;
 
+void ATStream_zap_camera( ATStream* stream, int numcam ) ;
+
 #endif
 
 

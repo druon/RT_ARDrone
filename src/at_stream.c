@@ -247,4 +247,48 @@ void ATStream_move( ATStream* stream, uint32_t flag, float roll, float pitch, fl
 }
 
 
+void ATStream_zap_camera( ATStream* stream, int numcam ) {
+
+	char command[160] ;
+
+	printf("[ AT ] Zapping ... \n");			
+	
+	pthread_mutex_lock( &(stream->mutex) ) ;
+
+	sprintf( command, "AT*CONFIG=%d,\"video:video_channel\",\"%d\"\r", stream->seq, numcam ) ;
+	
+	sendto( stream->socket, 
+		command, strlen(command), 0, 
+		(struct sockaddr *) &(stream->addr), sizeof(struct sockaddr) );
+
+	usleep( 20000 ) ;
+
+	stream->seq++ ;
+
+	pthread_mutex_unlock( &(stream->mutex) ) ;
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

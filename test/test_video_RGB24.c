@@ -44,15 +44,27 @@ int main ( int argc, char** argv, char** envv ) {
 	ARDrone_trim ( bob ) ;
 	
 	iFrame = 0 ;
+	
+	ARDrone_zap_camera ( bob, 1 ) ;
 
-	while(1) {
+	sleep(2) ;
+
+	for ( iFrame=0; iFrame<100; iFrame++ ) {
 
 		ARDrone_get_RGB24Image ( bob, img ) ;
-		
 		SaveFrame( img, iFrame ) ;
-		iFrame++ ;
 
-		usleep( 50000 ) ;
+	}
+
+	ARDrone_zap_camera ( bob, 2 ) ;
+
+	sleep(2) ;
+
+	for ( iFrame=100; iFrame<200; iFrame++ ) {
+
+		ARDrone_get_RGB24Image ( bob, img ) ;
+		SaveFrame( img, iFrame ) ;
+
 	}
 
 	ARDrone_free( bob ) ;
