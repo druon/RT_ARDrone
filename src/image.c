@@ -29,8 +29,8 @@ RGB24Image* RGB24Image_new( int width, int height ) {
 
 	RGB24Image* tmp ;
 	tmp = (RGB24Image*) malloc ( sizeof ( RGB24Image ) ) ;
-	tmp->height = width ;
-	tmp->width = height ;
+	tmp->width = width ;
+	tmp->height = height ;
 	tmp->pixels = ( unsigned char*) malloc ( tmp->height * tmp->width * 3 ) ;
 
 	return tmp ;
@@ -63,8 +63,8 @@ YUV420Image* YUV420Image_new( int width, int height ) {
 	YUV420Image* tmp ;
 
 	tmp = (YUV420Image*) malloc ( sizeof ( YUV420Image ) ) ;
-	tmp->height = width ;
-	tmp->width = height ;
+	tmp->width = width ;
+	tmp->height = height ;
 	tmp->pixels = ( unsigned char*) malloc ( tmp->height * tmp->width * 4.5 ) ;
 	
 	return tmp ;
