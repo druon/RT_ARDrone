@@ -35,8 +35,8 @@ endforeach()
 ### Search for Lib/Headers
 
 find_package( RT_ARDrone REQUIRED )
-find_package(OpenGL)
-find_package( X11)
+find_package( OpenGL )
+find_package( X11 )
 	
 ### Set include directories 
         
@@ -45,7 +45,6 @@ include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/include"
         	     "${CMAKE_CURRENT_BINARY_DIR}"
                      "${CMAKE_INSTALL_PREFIX}/include"
 		     "${RT_ARDRONE_INCLUDE_DIRS}"
-		     "${SDL_INCLUDE_DIR}" 
         	     "${X11_X11_INCLUDE_PATH}"
 		     "${OPENGL_INCLUDE_DIR}"
 )
