@@ -50,6 +50,9 @@ include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/include"
 )
 
 
+### Add library path
+
+LINK_DIRECTORIES( ${LINK_DIRECTORIES} ${RT_ARDRONE_LIBRARY_DIR} )
 
 ### File Lists
 
