@@ -76,7 +76,7 @@ void VideoStream_connect( VideoStream* stream ) {
 	
 	avcodec_register_all() ;
 
-	stream->pCodecH264 = avcodec_find_decoder( CODEC_ID_H264 ) ;
+	stream->pCodecH264 = avcodec_find_decoder( AV_CODEC_ID_H264 ) ;
 
 	if ( stream->pCodecH264 == NULL ) {
 		printf("ERROR\n") ;
@@ -97,7 +97,7 @@ void VideoStream_connect( VideoStream* stream ) {
 	stream->pCodecCtxH264->skip_loop_filter = AVDISCARD_DEFAULT ;
 	stream->pCodecCtxH264->workaround_bugs = FF_BUG_AUTODETECT ;
 	stream->pCodecCtxH264->coder_type = AVMEDIA_TYPE_VIDEO ;
-	stream->pCodecCtxH264->codec_id = CODEC_ID_H264 ;
+	stream->pCodecCtxH264->codec_id = AV_CODEC_ID_H264 ;
 	stream->pCodecCtxH264->skip_idct = AVDISCARD_DEFAULT ;
 
 	av_dict_set(&(stream->opts), "b", "2.5M", 0);
