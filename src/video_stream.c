@@ -91,7 +91,7 @@ void VideoStream_connect( VideoStream* stream ) {
 		exit(0) ;
 	}
 
-	stream->pCodecCtxH264->pix_fmt = PIX_FMT_YUV420P ;
+	stream->pCodecCtxH264->pix_fmt = AV_PIX_FMT_YUV420P ;
 	stream->pCodecCtxH264->skip_frame = AVDISCARD_DEFAULT ;
 	stream->pCodecCtxH264->error_concealment = FF_EC_GUESS_MVS | FF_EC_DEBLOCK ;
 	stream->pCodecCtxH264->skip_loop_filter = AVDISCARD_DEFAULT ;
@@ -107,9 +107,9 @@ void VideoStream_connect( VideoStream* stream ) {
 		exit(0) ;
 	}
 
-	stream->picture = avcodec_alloc_frame() ;
+	stream->picture = av_frame_alloc() ;
 
-	stream->RGBPicture = avcodec_alloc_frame() ;
+	stream->RGBPicture = av_frame_alloc() ;
 
 	av_init_packet(&stream->packet) ;
 	
@@ -219,7 +219,7 @@ void VideoStream_getRGB24Image( VideoStream* stream, RGB24Image* image ) {
 			RGB24Image_resize( image, stream->pCodecCtxH264->width, stream->pCodecCtxH264->height ) ;
 
 	 
-		avpicture_fill((AVPicture *) stream->RGBPicture, image->pixels, PIX_FMT_RGB24, stream->pCodecCtxH264->width, stream->pCodecCtxH264->height);
+		avpicture_fill((AVPicture *) stream->RGBPicture, image->pixels, AV_PIX_FMT_RGB24, stream->pCodecCtxH264->width, stream->pCodecCtxH264->height);
   
 
 		stream->sws_ctx = sws_getContext ( stream->pCodecCtxH264->width,
@@ -227,7 +227,7 @@ void VideoStream_getRGB24Image( VideoStream* stream, RGB24Image* image ) {
 						   stream->pCodecCtxH264->pix_fmt,
 						   stream->pCodecCtxH264->width,
 						   stream->pCodecCtxH264->height,
-						   PIX_FMT_RGB24,
+						   AV_PIX_FMT_RGB24,
 						   SWS_BILINEAR,
 						   NULL, NULL, NULL );
  
