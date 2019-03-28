@@ -156,10 +156,10 @@ void* video_threadfct( void* data ) {
 
 			int header_size = shift_byte( buffer[6], buffer[7], 0, 0 ) ; 
 	
-			if ( header_size != 68 ) {
-				fprintf(stderr,"ERROR : wrong PAVE HEADER size \n" ) ;
-				exit ( EXIT_FAILURE ) ;
-			}
+//			if ( header_size != 68 ) {
+//				fprintf(stderr,"ERROR : wrong PAVE HEADER size \n" ) ;
+//				exit ( EXIT_FAILURE ) ;
+//			}
 
 			int payload_size = shift_byte( buffer[8], buffer[9],buffer[10] , buffer[11] ) ;
 
